@@ -36,7 +36,7 @@ public class Crash : MonoBehaviour {
        distToGround = collider.bounds.extents.y;
        groundedOffest = collider.size.x / 2f;
        
-       groundLayerMask = LayerMask.GetMask("Ground");
+       groundLayerMask = LayerMask.GetMask(Layers.GROUND);
 	}
 	
 	// Update is called once per frame

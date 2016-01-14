@@ -14,7 +14,7 @@ public class Crate : MonoBehaviour {
 	
     
     void OnCollisionEnter(Collision col) {
-        if (col.gameObject.tag == "Crash") {
+        if (col.gameObject.tag == Tags.CRASH) {
             if (Crash.S.spinning) {
                 BreakBox();
                 return;
@@ -33,7 +33,7 @@ public class Crate : MonoBehaviour {
     }
     
     void OnCollisionStay(Collision col) {
-        if (col.gameObject.tag == "Crash" && Crash.S.spinning) {
+        if (col.gameObject.tag == Tags.CRASH && Crash.S.spinning) {
             BreakBox();
         }
     }
