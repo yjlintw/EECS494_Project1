@@ -57,6 +57,8 @@ public class TurtleEnemy : Enemy {
         if (col.gameObject.tag == Tags.CRASH) {
             if (Crash.S.spinning) {
                 LaunchEnemy();
+                flipped = true;
+                Flip(flipped);
                 return;
             }
             
