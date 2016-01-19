@@ -22,6 +22,9 @@ public class Crash : MonoBehaviour {
     int         groundLayerMask;
     float       spinStartTime;
     
+    private float jumpTimer = 0;
+    public float JUMP_TIME = 2f;
+    
     public static Crash S;
     
     
@@ -74,11 +77,16 @@ public class Crash : MonoBehaviour {
        if (jump > 0 && grounded) {
            vel.y = jumpVel;
            jumping = true;
+           jumpTimer = Time.time;
        } else {
            if (grounded) {
                jumping = false;
+           } else if (jump > 0 && (Time.time - jumpTimer) < JUMP_TIME) {
+               vel.y = jumpVel;
+               Debug.Log("Jump: " + jump.ToString());
+           } else {
+               vel.y = rigid.velocity.y;
            }
-           vel.y = rigid.velocity.y;
        }
        
        // Apply our new Velocity

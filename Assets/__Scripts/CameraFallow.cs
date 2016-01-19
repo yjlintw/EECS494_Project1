@@ -7,6 +7,7 @@ public class CameraFallow : MonoBehaviour {
     public float backOffset = 5.0f;
     public float tweenSpeed = 5.0f;
     private float offset = 0;
+    private bool farAngleFlag = false;
 	// Update is called once per frame
     void Awake() {
         offset = followDistance;
@@ -15,6 +16,12 @@ public class CameraFallow : MonoBehaviour {
 	void Update () {
         float iV = Input.GetAxis("Vertical");
         if (iV < 0) {
+            farAngleFlag = true;        
+        } else if (iV > 0) {
+            farAngleFlag = false;
+        }
+        
+        if (farAngleFlag) {
             offset += tweenSpeed * Time.deltaTime;
             if (offset >= followDistance + backOffset) {
                 offset = followDistance + backOffset;
