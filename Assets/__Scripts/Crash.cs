@@ -4,8 +4,7 @@ using System.Collections;
 public class Crash : MonoBehaviour {
     
     public float        speed = 10f;
-    public float        jumpHighVel = 6f;
-    public float        jumpLowVel = 3f;
+    public float        jumpVel = 3f;
     public float        spinDuration;
     public float        spinSpeed;
     
@@ -99,7 +98,7 @@ public class Crash : MonoBehaviour {
        
 
        if (jump > 0 && grounded) {
-           vel.y = jumpHighVel;
+           vel.y = jumpVel;
            jumping = true;
            jumpTimer = Time.time;
        } else {
