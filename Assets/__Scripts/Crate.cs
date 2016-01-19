@@ -5,7 +5,7 @@ public class Crate : MonoBehaviour {
 
     public GameObject item;
     
-    BoxCollider boxCol;
+    protected BoxCollider boxCol;
 
 	// Use this for initialization
 	void Start () {
@@ -38,7 +38,7 @@ public class Crate : MonoBehaviour {
         }
     }
     
-    void BreakBox() {
+    protected virtual void BreakBox() {
         Vector3 pos = transform.position;
         Destroy(this.gameObject);
         if (item != null) {

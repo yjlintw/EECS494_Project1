@@ -21,18 +21,20 @@ public class CrabEnemy : Enemy {
         if (col.gameObject.tag == Tags.WALL) {
             speed *= -1;
         } else if (col.gameObject.tag == Tags.CRASH) {
-            
+         
+			bool killEnemy = Crash.S.collider.bounds.min.y >= boxCol.bounds.max.y - 0.1f;
+
             if (Crash.S.spinning) {
                 LaunchEnemy();
                 return;
             }
-            
-            bool killEnemy = Crash.S.collider.bounds.min.y >= boxCol.bounds.max.y - 0.1f;
-            
-            if (Crash.S.falling && killEnemy) {
-                Destroy(this.gameObject);
-                Crash.S.Bounce(3f);
-            }
+			else if (Crash.S.falling && killEnemy) {
+				Destroy(this.gameObject);
+				Crash.S.Bounce(3f);
+			}
+			else {
+				Crash.S.TakeHit();
+			}
         }
     }
 }
