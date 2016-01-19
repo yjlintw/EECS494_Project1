@@ -30,8 +30,9 @@ public class TurtleEnemy : Enemy {
                 Vector3 target = patrolPoints[targetPointIndex].transform.position;
                 Vector3 direction = target - transform.position;
                 
-                Vector3 newDir = Vector3.RotateTowards(transform.forward, direction, Time.deltaTime * 2, -1.0f);
+                Vector3 newDir = Vector3.RotateTowards(transform.forward, direction, Time.deltaTime * 2, 1.0f);
                 rigid.rotation = Quaternion.LookRotation(newDir);
+                Debug.Log(Vector3.Angle(newDir, direction));
                 if (Vector3.Angle(newDir, direction) < 0.1f) {
                     turning = false;
                 }
