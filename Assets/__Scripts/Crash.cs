@@ -37,6 +37,8 @@ public class Crash : MonoBehaviour {
     
 	public Material[] materials;
 	public Color[]	originalColors;
+    
+    private int faceAdjustment = 0;
 
     
     void Awake() {
@@ -81,14 +83,20 @@ public class Crash : MonoBehaviour {
       
        	// Set the x and z values of new velocity
        	vel = Vector3.zero;
-       	vel.z += iV * speed;
-       	vel.x += iH * speed;
+       	// vel.z += iV * speed;
+       	// vel.x += iH * speed;
+        vel = (transform.forward * Mathf.Abs(iV) + transform.right * faceAdjustment * iH) * speed;
        
        	if (spinning) {
            	transform.Rotate(Vector3.up, spinSpeed * Time.fixedTime);
 
        	} else if (GetArrowInput() && vel != Vector3.zero) {
-        	transform.rotation = Quaternion.LookRotation(vel);
+            if (iV > 0) {
+                faceAdjustment = 1;
+            } else if (iV < 0) {
+                faceAdjustment = -1;
+            }
+        	transform.rotation = Quaternion.Euler(new Vector3(0, Camera.main.transform.rotation.eulerAngles.y - (1 - faceAdjustment) * 90, 0));
        	} 
        
 
