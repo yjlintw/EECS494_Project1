@@ -19,6 +19,7 @@ public class CrabEnemy : Enemy {
     
     void OnCollisionEnter(Collision col) {
         if (col.gameObject.tag == Tags.WALL) {
+            Debug.Log("Crab, collide wall");
             speed *= -1;
         } else if (col.gameObject.tag == Tags.CRASH) {
          

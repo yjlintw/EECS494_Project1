@@ -44,7 +44,7 @@ public class CameraFallow : MonoBehaviour {
         float movePercentage = moveDistance / sectorDistance;
         
         Vector3 newPosition = Vector3.Lerp(currentNode.transform.position, currentNode.nextNode.transform.position, movePercentage);
-        Debug.Log(movePercentage);
+        // Debug.Log(movePercentage);
         newPosition.z = Crash.S.transform.position.z - offset;
         Camera.main.transform.position = newPosition;
         

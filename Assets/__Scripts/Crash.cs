@@ -6,6 +6,7 @@ public class Crash : MonoBehaviour {
     public float        speed = 10f;
     public float        jumpVel = 3f;
     public float        spinDuration;
+    public float        spinPauseDuration = 1f;
     public float        spinSpeed;
     
 	public int 			maskCount = 0;
@@ -20,6 +21,9 @@ public class Crash : MonoBehaviour {
     public bool         spinning = false;
     public BoxCollider  collider;
 	public Vector3		checkpoint;
+    
+    public GameObject foot;
+    public GameObject body;
 
 
     float       iH, iV;
@@ -29,6 +33,8 @@ public class Crash : MonoBehaviour {
     Rigidbody   rigid;
     int         groundLayerMask;
     float       spinStartTime;
+    float       spinEndTime;
+    bool        canSpin = true;
     
     private float jumpTimer = 0;
     public float JUMP_TIME = 2f;
@@ -37,6 +43,7 @@ public class Crash : MonoBehaviour {
     
 	public Material[] materials;
 	public Color[]	originalColors;
+    private bool jumpRelease = false;
 
     
     void Awake() {
@@ -63,28 +70,48 @@ public class Crash : MonoBehaviour {
 	void FixedUpdate () {
 		if(!alive) return;
 	   	// Get movement input
+        
       	iH = Input.GetAxis("Horizontal");
        	iV = Input.GetAxis("Vertical");
        	float jump = Input.GetAxis("Jump");
        	float spin = Input.GetAxis("Fire1");
        
+        if (iH != 0 || iV != 0) {
+            foot.SetActive(false);
+            body.SetActive(true);
+        } else {
+            foot.SetActive(true);
+            body.SetActive(false);
+        }
       
-       	if (!spinning && spin > 0) {
+       	if (canSpin && !spinning && spin > 0) {
            spinning = true;
            spinStartTime = Time.time;
        	}
        
-       	if (Time.time - spinStartTime > spinDuration) {
+       	if (spinning && Time.time - spinStartTime > spinDuration) {
            spinning = false;
+           canSpin = false;
+           spinEndTime = Time.time;
        	}
+           
+        if (!canSpin && Time.time - spinEndTime > spinPauseDuration && spin <= 0) {
+            canSpin = true;
+        }
        
       
        	// Set the x and z values of new velocity
-       	vel = Vector3.zero;
-       	vel.z += iV * speed;
        	
-        vel = (transform.forward * Mathf.Abs(iV)) * speed;
-        vel.x += iH * speed;
+        
+        if (spinning) {
+            vel = rigid.velocity;
+        } else {
+            vel = Vector3.zero;
+       	    vel.z += iV * speed;
+       	
+            vel = (transform.forward * Mathf.Abs(iV)) * speed;
+            vel.x += iH * speed;
+        }
         
        
        	if (spinning) {
@@ -102,8 +129,11 @@ public class Crash : MonoBehaviour {
 
 
        falling = rigid.velocity.y < 0;
-       grounded = (grounded && !jumping) || OnGround();
+       grounded = (grounded && !jumping && !falling) || OnGround();
        
+       if (jumping && jump <= 0) {
+           jumpRelease = true;
+       }
 
        if (jump > 0 && grounded) {
            vel.y = jumpVel;
@@ -112,7 +142,8 @@ public class Crash : MonoBehaviour {
        } else {
            if (grounded) {
                jumping = false;
-           } else if (jump > 0 && (Time.time - jumpTimer) < JUMP_TIME) {
+               jumpRelease = false;
+           } else if (jump > 0 && (Time.time - jumpTimer) < JUMP_TIME && !jumpRelease) {
                vel.y = jumpVel;
                Debug.Log("Jump: " + jump.ToString());
            } else {
@@ -122,9 +153,6 @@ public class Crash : MonoBehaviour {
        
        // Apply our new Velocity
        rigid.velocity = vel;
-	
-
-	
 	}
     
     public void LandOnCrate() {

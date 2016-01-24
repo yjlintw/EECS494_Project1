@@ -17,7 +17,7 @@ public class TurtleEnemy : Enemy {
 	public override void Move () {
         if (launched) {
             if (Time.time - launchTime > launchDuration) {
-                Destroy(this.gameObject.transform.parent.gameObject);
+                Destroy(this.gameObject.transform.gameObject);
             } else {
                 rigid.velocity = Vector3.forward * launchSpeed;
             }
@@ -32,7 +32,6 @@ public class TurtleEnemy : Enemy {
                 
                 Vector3 newDir = Vector3.RotateTowards(transform.forward, direction, Time.deltaTime * 2, 1.0f);
                 rigid.rotation = Quaternion.LookRotation(newDir);
-                Debug.Log(Vector3.Angle(newDir, direction));
                 if (Vector3.Angle(newDir, direction) < 0.1f) {
                     turning = false;
                 }
