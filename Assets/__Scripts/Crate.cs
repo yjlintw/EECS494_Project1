@@ -4,6 +4,7 @@ using System.Collections;
 public class Crate : MonoBehaviour {
 
     public GameObject item;
+    public float bounceHeight = 7f;
     
     protected BoxCollider boxCol;
 
@@ -14,22 +15,18 @@ public class Crate : MonoBehaviour {
 	
     
     void OnCollisionEnter(Collision col) {
-        // if (col.gameObject.tag == Tags.CRASH) {
-        //     if (Crash.S.spinning) {
-        //         BreakBox();
-        //         return;
-        //     }
-            
-        //     bool landed = Crash.S.collider.bounds.min.y >= boxCol.bounds.max.y - .01f;
-        //     if(Crash.S.falling && landed) {
-        //         if (Crash.S.jumping) {
-        //             BreakBox();
-        //             Crash.S.Bounce(3f);
-        //         } else {
-        //             Crash.S.LandOnCrate();
-        //         }
-        //     }
-        // }
+        Debug.Log("OnCollision");
+        if (col.gameObject.tag == Tags.CRASH) {
+            bool landed = Crash.S.collider.bounds.min.y <= boxCol.bounds.max.y + .01f;
+            if(Crash.S.falling && landed) {
+                if (Crash.S.jumping) {
+                    BreakBox();
+                    Crash.S.Bounce(bounceHeight);
+                } else {
+                    Crash.S.LandOnCrate();
+                }
+            }
+        }
     }
     
     void OnTriggerEnter(Collider col) {
@@ -37,16 +34,6 @@ public class Crate : MonoBehaviour {
             if (Crash.S.spinning) {
                 BreakBox();
                 return;
-            }
-            
-            bool landed = Crash.S.collider.bounds.min.y >= boxCol.bounds.max.y - .01f;
-            if(Crash.S.falling && landed) {
-                if (Crash.S.jumping) {
-                    BreakBox();
-                    Crash.S.Bounce(3f);
-                } else {
-                    Crash.S.LandOnCrate();
-                }
             }
         }
     }

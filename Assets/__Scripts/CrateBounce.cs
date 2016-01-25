@@ -7,13 +7,13 @@ public class CrateBounce : Crate{
 
 	void OnCollisionEnter(Collision col) {
 		if (col.gameObject.tag == Tags.CRASH) {
-			if (Crash.S.spinning) {
-				BreakBox();
-				return;
-			}
-			bool landed = Crash.S.collider.bounds.min.y >= boxCol.bounds.max.y - .1f;
+			// if (Crash.S.spinning) {
+			// 	BreakBox();
+			// 	return;
+			// }
+			bool landed = Crash.S.collider.bounds.min.y <= boxCol.bounds.max.y + .1f;
 			if (Crash.S.falling && landed) {
-				Crash.S.Bounce (6f);
+				Crash.S.Bounce (bounceHeight);
 				if (fruitRemaining > 0) 
 				{
 					Vector3 pos = transform.position;

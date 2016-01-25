@@ -13,12 +13,16 @@ public class CameraSplineEditor : Editor {
         GUILayout.BeginHorizontal("box");
         splineNodeIndex = EditorGUILayout.Popup(splineNodeIndex, csScript.GetNodeNameList());
         if (GUILayout.Button("Move Camera")) {
-            Camera.main.transform.position = csScript.nodeList[splineNodeIndex].transform.position;
+            Vector3 newPos = csScript.nodeList[splineNodeIndex].transform.position;
+            newPos.z -= csScript.nodeList[splineNodeIndex].followDistance;
+            Camera.main.transform.position = newPos;
             Camera.main.transform.rotation = csScript.nodeList[splineNodeIndex].transform.rotation;
         }
         
         if (GUILayout.Button("Update Node")) {
-            csScript.nodeList[splineNodeIndex].transform.position = Camera.main.transform.position;
+            Vector3 newPos = Camera.main.transform.position;
+            newPos.z += csScript.nodeList[splineNodeIndex].followDistance;
+            csScript.nodeList[splineNodeIndex].transform.position = newPos;
             csScript.nodeList[splineNodeIndex].transform.rotation = Camera.main.transform.rotation;
         }
         GUILayout.EndHorizontal();

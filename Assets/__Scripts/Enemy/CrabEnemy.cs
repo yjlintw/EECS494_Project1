@@ -23,7 +23,7 @@ public class CrabEnemy : Enemy {
             speed *= -1;
         } else if (col.gameObject.tag == Tags.CRASH) {
          
-			bool killEnemy = Crash.S.collider.bounds.min.y >= boxCol.bounds.max.y - 0.1f;
+			bool killEnemy = Crash.S.collider.bounds.min.y <= boxCol.bounds.max.y + 0.1f;
 
             if (Crash.S.spinning) {
                 LaunchEnemy();

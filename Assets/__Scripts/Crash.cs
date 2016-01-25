@@ -24,6 +24,7 @@ public class Crash : MonoBehaviour {
     
     public GameObject foot;
     public GameObject body;
+    public GameObject spawningObjects;
 
 
     float       iH, iV;
@@ -44,11 +45,12 @@ public class Crash : MonoBehaviour {
 	public Material[] materials;
 	public Color[]	originalColors;
     private bool jumpRelease = false;
+    private bool jumpKeyDown = false;
 
     
     void Awake() {
         S = this;
-		checkpoint = new Vector3(0,1,-10);
+		// checkpoint = new Vector3(0,1,-10);
     }
 	// Use this for initialization
 	void Start () {
@@ -61,7 +63,7 @@ public class Crash : MonoBehaviour {
  		collider = gameObject.GetComponent<BoxCollider>();
        
      	distToGround = collider.bounds.extents.y;
-        groundedOffest = collider.size.x / 2f;
+        groundedOffest = collider.size.x / 1.5f;
        
         groundLayerMask = LayerMask.GetMask(Layers.GROUND);
 	}
@@ -135,7 +137,7 @@ public class Crash : MonoBehaviour {
            jumpRelease = true;
        }
 
-       if (jump > 0 && grounded) {
+       if (jump > 0 && grounded && !jumpKeyDown) {
            vel.y = jumpVel;
            jumping = true;
            jumpTimer = Time.time;
@@ -149,6 +151,12 @@ public class Crash : MonoBehaviour {
            } else {
                vel.y = rigid.velocity.y;
            }
+       }
+       
+       if (jump <= 0) {
+           jumpKeyDown = false;
+       } else {
+           jumpKeyDown = true;
        }
        
        // Apply our new Velocity
@@ -193,6 +201,11 @@ public class Crash : MonoBehaviour {
 		transform.position = checkpoint;
 		rigid.freezeRotation = true;
 		transform.rotation = Quaternion.identity;
+        Respawn[] respawns = spawningObjects.GetComponentsInChildren<Respawn>();
+        for (int i = 0; i < respawns.Length; i++) {
+            respawns[i].Spawn();
+        }
+        
 	}
 
 	public void IncrementMasks() {

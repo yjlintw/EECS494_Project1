@@ -17,7 +17,7 @@ public class TurtleEnemy : Enemy {
 	public override void Move () {
         if (launched) {
             if (Time.time - launchTime > launchDuration) {
-                Destroy(this.gameObject.transform.gameObject);
+                Destroy(this.gameObject.transform.parent.gameObject);
             } else {
                 rigid.velocity = Vector3.forward * launchSpeed;
             }

@@ -21,6 +21,16 @@ public class CameraFallow : MonoBehaviour {
         } else if (iV > 0) {
             farAngleFlag = false;
         }
+   
+        // Vector3 pos = Camera.main.transform.position;
+        // pos.z = Crash.S.transform.position.z - offset;
+        // pos.y = Crash.S.transform.position.y + 6.0f;
+        // pos.x = Crash.S.transform.position.x;
+        // Camera.main.transform.position = pos;
+        float sectorDistance = Mathf.Abs(currentNode.transform.position.z - currentNode.nextNode.transform.position.z);
+        float moveDistance = Mathf.Abs(Crash.S.transform.position.z - currentNode.transform.position.z);
+        float movePercentage = moveDistance / sectorDistance;
+        followDistance = Mathf.Lerp(currentNode.followDistance, currentNode.nextNode.followDistance, movePercentage);
         
         if (farAngleFlag) {
             offset += tweenSpeed * Time.deltaTime;
@@ -33,15 +43,6 @@ public class CameraFallow : MonoBehaviour {
                 offset = followDistance;
             }
         }
-        
-        // Vector3 pos = Camera.main.transform.position;
-        // pos.z = Crash.S.transform.position.z - offset;
-        // pos.y = Crash.S.transform.position.y + 6.0f;
-        // pos.x = Crash.S.transform.position.x;
-        // Camera.main.transform.position = pos;
-        float sectorDistance = Mathf.Abs(currentNode.transform.position.z - currentNode.nextNode.transform.position.z);
-        float moveDistance = Mathf.Abs(Crash.S.transform.position.z - currentNode.transform.position.z);
-        float movePercentage = moveDistance / sectorDistance;
         
         Vector3 newPosition = Vector3.Lerp(currentNode.transform.position, currentNode.nextNode.transform.position, movePercentage);
         // Debug.Log(movePercentage);
