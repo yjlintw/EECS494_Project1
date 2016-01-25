@@ -37,7 +37,7 @@ public class Crash : MonoBehaviour {
     
 	public Material[] materials;
 	public Color[]	originalColors;
-
+    public GameObject akuAkuMask;
     
     void Awake() {
         S = this;
@@ -173,10 +173,12 @@ public class Crash : MonoBehaviour {
 		invincible = true;
 		invincibleStartTime = Time.time;
 		Invoke ("ShowInvincibleFlash", 0.25f);
+        akuAkuMask.SetActive(true);
 	}
 	public void EndAkuAku() {
 		invincible = false;
 		maskCount = 2;
+        akuAkuMask.SetActive(false);
 	}
 	void ShowInvincibleFlash() {
 		foreach(Material m in materials) {

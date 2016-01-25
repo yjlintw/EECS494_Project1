@@ -15,7 +15,7 @@ public class Crate : MonoBehaviour {
     
     void OnCollisionEnter(Collision col) {
         if (col.gameObject.tag == Tags.CRASH) {
-            if (Crash.S.spinning) {
+            if (Crash.S.spinning || Crash.S.invincible) {
                 BreakBox();
                 return;
             }

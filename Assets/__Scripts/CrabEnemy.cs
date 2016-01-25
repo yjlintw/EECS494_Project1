@@ -21,6 +21,10 @@ public class CrabEnemy : Enemy {
         if (col.gameObject.tag == Tags.WALL) {
             speed *= -1;
         } else if (col.gameObject.tag == Tags.CRASH) {
+            if(Crash.S.invincible) {
+                LaunchEnemy();
+                return;
+            }
          
 			bool killEnemy = Crash.S.collider.bounds.min.y >= boxCol.bounds.max.y - 0.1f;
 
