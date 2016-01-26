@@ -41,7 +41,7 @@ public class Crash : MonoBehaviour {
     
     void Awake() {
         S = this;
-		checkpoint = new Vector3(0,1,-10);
+		checkpoint = transform.position;
     }
 	// Use this for initialization
 	void Start () {

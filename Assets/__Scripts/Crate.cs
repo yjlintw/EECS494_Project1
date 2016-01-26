@@ -20,7 +20,7 @@ public class Crate : MonoBehaviour {
                 return;
             }
             
-            bool landed = Crash.S.collider.bounds.min.y >= boxCol.bounds.max.y - .01f;
+            bool landed = Crash.S.collider.bounds.min.y >= boxCol.bounds.max.y - .1f;
             if(Crash.S.falling && landed) {
                 if (Crash.S.jumping) {
                     BreakBox();
