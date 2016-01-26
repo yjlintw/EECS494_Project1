@@ -47,12 +47,11 @@ public class Crash : MonoBehaviour {
 	public Color[]	originalColors;
     private bool jumpRelease = false;
     private bool jumpKeyDown = false;
-    
-
+    public GameObject akuAkuMask;
     
     void Awake() {
         S = this;
-		// checkpoint = new Vector3(0,1,-10);
+		checkpoint = transform.position;
     }
 	// Use this for initialization
 	void Start () {
@@ -64,7 +63,7 @@ public class Crash : MonoBehaviour {
 	  	rigid = gameObject.GetComponent<Rigidbody>();
  		collider = gameObject.GetComponent<BoxCollider>();
        
-     	distToGround = collider.bounds.extents.y;
+     	distToGround = collider.bounds.extents.y + 0.1f;
         groundedOffest = collider.size.x / 1.5f;
        
         groundLayerMask = LayerMask.GetMask(Layers.GROUND);
@@ -227,10 +226,12 @@ public class Crash : MonoBehaviour {
 		invincible = true;
 		invincibleStartTime = Time.time;
 		Invoke ("ShowInvincibleFlash", 0.25f);
+        akuAkuMask.SetActive(true);
 	}
 	public void EndAkuAku() {
 		invincible = false;
 		maskCount = 2;
+        akuAkuMask.SetActive(false);
 	}
 	void ShowInvincibleFlash() {
 		foreach(Material m in materials) {
