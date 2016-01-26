@@ -25,6 +25,7 @@ public class Crash : MonoBehaviour {
     public GameObject foot;
     public GameObject body;
     public GameObject spawningObjects;
+    public CrateSwitch[] switchObjects;
 
 
     float       iH, iV;
@@ -46,6 +47,7 @@ public class Crash : MonoBehaviour {
 	public Color[]	originalColors;
     private bool jumpRelease = false;
     private bool jumpKeyDown = false;
+    
 
     
     void Awake() {
@@ -204,6 +206,9 @@ public class Crash : MonoBehaviour {
         Respawn[] respawns = spawningObjects.GetComponentsInChildren<Respawn>();
         for (int i = 0; i < respawns.Length; i++) {
             respawns[i].Spawn();
+        }
+        for (int i = 0; i < switchObjects.Length; i++) {
+            switchObjects[i].DeactivateSwitch();
         }
         
 	}

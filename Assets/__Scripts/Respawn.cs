@@ -14,7 +14,7 @@ public class Respawn : MonoBehaviour {
     public void Spawn() {
         if (spawnedGameObject == null) {
             spawnedGameObject = (GameObject)Instantiate(spawnPrefab, gameObject.transform.position, transform.rotation);
-            spawnedGameObject.GetComponent<Rigidbody>().useGravity = useGravity;
+            spawnedGameObject.GetComponentInChildren<Rigidbody>().useGravity = useGravity;
         }
     }
 }

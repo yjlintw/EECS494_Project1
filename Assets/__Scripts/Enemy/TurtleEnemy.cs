@@ -66,21 +66,21 @@ public class TurtleEnemy : Enemy {
     
     void OnCollisionEnter(Collision col) {
         if (col.gameObject.tag == Tags.CRASH) {
+            
+            bool jumpOnEnemy = Crash.S.collider.bounds.min.y >= boxCol.bounds.max.y - 0.1f;
             if (Crash.S.spinning) {
                 LaunchEnemy();
                 flipped = true;
                 Flip(flipped);
                 return;
-            }
-            
-            bool jumpOnEnemy = Crash.S.collider.bounds.min.y >= boxCol.bounds.max.y - 0.1f;
-            
-            if (Crash.S.falling && jumpOnEnemy) {
+            } else if (Crash.S.falling && jumpOnEnemy) {
                 if (!flipped) {
                     flipped = true;
                     Flip(flipped);
                     unflipTimer = Time.time;
                 }
+            } else if (!flipped) {
+                Crash.S.TakeHit();
             }
         }
     }
