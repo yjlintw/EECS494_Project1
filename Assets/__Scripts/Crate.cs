@@ -18,7 +18,7 @@ public class Crate : MonoBehaviour {
     void OnCollisionEnter(Collision col) {
         Debug.Log("OnCollision");
         if (col.gameObject.tag == Tags.CRASH) {
-            bool landed = Crash.S.collider.bounds.min.y >= boxCol.bounds.max.y - .01f;
+            bool landed = Crash.S.collider.bounds.min.y >= boxCol.bounds.max.y - .2f;
             Vector3 relativeVec = transform.InverseTransformPoint(Crash.S.transform.position);
             Debug.Log("RelativeVec" + relativeVec);
             if(Crash.S.falling && landed && relativeVec.y > 0.5f) {

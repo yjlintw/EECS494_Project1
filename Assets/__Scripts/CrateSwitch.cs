@@ -26,7 +26,7 @@ public class CrateSwitch : Crate {
 				return;
 			}
 
-			bool landed = Crash.S.collider.bounds.min.y >= boxCol.bounds.max.y - .1f;
+			bool landed = Crash.S.collider.bounds.min.y >= boxCol.bounds.max.y - .2f;
             
             Debug.Log("Crash: " +  Crash.S.collider.bounds.min.y + ", Switch BOX: " + boxCol.bounds.max.y);
 

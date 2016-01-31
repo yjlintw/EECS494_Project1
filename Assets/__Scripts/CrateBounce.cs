@@ -7,7 +7,7 @@ public class CrateBounce : Crate{
 
 	void OnCollisionEnter(Collision col) {
 		if (col.gameObject.tag == Tags.CRASH) {
-			bool landed = Crash.S.collider.bounds.min.y >= boxCol.bounds.max.y - .1f;
+			bool landed = Crash.S.collider.bounds.min.y >= boxCol.bounds.max.y - .2f;
 			if (Crash.S.falling && landed) {
 				Crash.S.Bounce (bounceHeight);
 				if (fruitRemaining > 0) 

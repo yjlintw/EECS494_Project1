@@ -7,7 +7,7 @@ public class CrateMulti : Crate {
 
 	void OnCollisionEnter(Collision col) {
 		if (col.gameObject.tag == Tags.CRASH) {
-			bool landed = Crash.S.collider.bounds.min.y >= boxCol.bounds.max.y - .1f;
+			bool landed = Crash.S.collider.bounds.min.y >= boxCol.bounds.max.y - .2f;
 			Vector3 relativeVec = transform.InverseTransformPoint(Crash.S.transform.position);
             if((Crash.S.falling && landed && relativeVec.y > 0.5f) || (Crash.S.jumping && relativeVec.y > 0.5f)) {
 				Crash.S.Bounce (bounceHeight);

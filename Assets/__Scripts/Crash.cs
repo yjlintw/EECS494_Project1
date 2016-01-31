@@ -66,8 +66,8 @@ public class Crash : MonoBehaviour {
 	  	rigid = gameObject.GetComponent<Rigidbody>();
  		collider = gameObject.GetComponent<BoxCollider>();
        
-     	distToGround = collider.bounds.extents.y + 0.1f;
-        groundedOffest = collider.size.x / 1.5f;
+     	distToGround = collider.bounds.extents.y + 0.01f;
+        groundedOffest = collider.size.x / 2.0f;
        
         groundLayerMask = LayerMask.GetMask(Layers.GROUND);
 	}
@@ -86,9 +86,9 @@ public class Crash : MonoBehaviour {
         RaycastHit hit;
         if(Physics.Raycast(transform.position, -currentUp, out hit, distToGround, groundLayerMask)){
             currentUp = hit.normal;
-            if (Mathf.Abs(Vector3.Dot(currentUp, Vector3.up)) < 0.1f) {
-                currentUp = Vector3.up;
-            }
+            // if (Mathf.Abs(Vector3.Dot(currentUp, Vector3.up)) < 0.01f) {
+            //     currentUp = Vector3.up;
+            // }
         }
         
       	iH = Input.GetAxis("Horizontal");
@@ -147,12 +147,13 @@ public class Crash : MonoBehaviour {
             Vector3 globalVel = Vector3.zero;
             globalVel.z += iV * speed;
             globalVel.x += iH * speed;
-        	transform.rotation = Quaternion.LookRotation(globalVel, currentUp);
+        	transform.rotation = Quaternion.LookRotation(globalVel, Vector3.up);
             transform.Rotate(cameraAngle);
        	} else {
-            transform.rotation = Quaternion.LookRotation(transform.forward, currentUp);       
+            transform.rotation = Quaternion.LookRotation(transform.forward, Vector3.up);       
         } 
-           
+        
+        transform.rotation = Quaternion.FromToRotation(transform.up, currentUp) * transform.rotation;
         Debug.DrawRay(transform.position, currentUp, Color.yellow);
         Debug.DrawRay(transform.position, transform.up, Color.blue);
 
@@ -163,6 +164,10 @@ public class Crash : MonoBehaviour {
         
         if (jumping && jump <= 0) {
             jumpRelease = true;
+        }
+        
+        if (jumping && OnGround()) {
+            Debug.Log("On Ground()");
         }
 
         if (jump > 0 && grounded && !jumpKeyDown) {
@@ -204,6 +209,7 @@ public class Crash : MonoBehaviour {
     
     public void Bounce(float bounceVel) {
         Vector3 vel = rigid.velocity;
+        // vel += bounceVel * transform.up;
         vel.y = bounceVel;
         rigid.velocity = vel;
     }
