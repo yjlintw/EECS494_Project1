@@ -86,6 +86,7 @@ public class Crash : MonoBehaviour {
                 }
             }
         }
+
         akuAkuMask.transform.position = transform.position + new Vector3(1, 2, 0);
 	   	// Get movement input
         if (hasMask()) {
@@ -97,7 +98,7 @@ public class Crash : MonoBehaviour {
         RaycastHit hit;
         if(Physics.Raycast(transform.position, Vector3.down, out hit, distToGround * 1.5f, groundLayerMask)){
             currentUp = hit.normal;
-            if (Mathf.Abs(Vector3.Dot(currentUp, Vector3.up)) < 0.01f) {
+            if (Mathf.Abs(Vector3.Dot(currentUp, Vector3.up)) < 0.1f) {
                 currentUp = Vector3.up;
             }
         }
@@ -165,10 +166,9 @@ public class Crash : MonoBehaviour {
         } 
         
         transform.rotation = Quaternion.FromToRotation(transform.up, currentUp) * transform.rotation;
+
         Debug.DrawRay(transform.position, currentUp, Color.yellow);
         Debug.DrawRay(transform.position, transform.up, Color.blue);
-
-
         
         grounded = (grounded && !jumping) || OnGround();
         falling = rigid.velocity.y < 0.1f && !grounded;
@@ -215,7 +215,6 @@ public class Crash : MonoBehaviour {
     public void LandOnCrate() {
         grounded = true;
         jumping = false;
-        
     }
     
     public void Bounce(float bounceVel) {

@@ -48,11 +48,6 @@ public class Crate : MonoBehaviour {
         }
     }
     
-    void OnCollisionStay(Collision col) {
-        // if (col.gameObject.tag == Tags.CRASH && Crash.S.spinning) {
-        //     BreakBox();
-        // }
-    }
     
     protected virtual void BreakBox() {
         if (broken) {

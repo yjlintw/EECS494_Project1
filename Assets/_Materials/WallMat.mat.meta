@@ -1,6 +1,11 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: 2c0fa1ef6bc7040a09988a38a22f3caa
 timeCreated: 1454272920
+=======
+guid: da4639efbfeee47c58cb2c350675b81f
+timeCreated: 1454263938
+>>>>>>> Scene_1
 licenseType: Free
 NativeFormatImporter:
   userData: 

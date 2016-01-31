@@ -18,9 +18,6 @@ public class CrabEnemy : Enemy {
 	}
     
     void OnCollisionEnter(Collision col) {
-        if (launched) {
-            Debug.Log(rigid.velocity.magnitude);
-        }
         if (launched && col.gameObject.tag == Tags.WALL && rigid.velocity.magnitude < 0.5f) {
             Destroy(this.gameObject);
             return;
