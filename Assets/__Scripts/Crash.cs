@@ -157,8 +157,9 @@ public class Crash : MonoBehaviour {
         Debug.DrawRay(transform.position, transform.up, Color.blue);
 
 
-        falling = rigid.velocity.y < 0.1f;
+        
         grounded = (grounded && !jumping) || OnGround();
+        falling = rigid.velocity.y < 0.1f && !grounded;
         
         if (jumping && jump <= 0) {
             jumpRelease = true;
@@ -197,6 +198,7 @@ public class Crash : MonoBehaviour {
     
     public void LandOnCrate() {
         grounded = true;
+        jumping = false;
         
     }
     

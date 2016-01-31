@@ -9,8 +9,7 @@ public class CrateMulti : Crate {
 		if (col.gameObject.tag == Tags.CRASH) {
 			bool landed = Crash.S.collider.bounds.min.y >= boxCol.bounds.max.y - .1f;
 			Vector3 relativeVec = transform.InverseTransformPoint(Crash.S.transform.position);
-            Debug.Log("RelativeVec" + relativeVec);
-            if((Crash.S.falling && landed && relativeVec.y > 1.0f) || (Crash.S.jumping && relativeVec.y > 1.0f)) {
+            if((Crash.S.falling && landed && relativeVec.y > 0.5f) || (Crash.S.jumping && relativeVec.y > 0.5f)) {
 				Crash.S.Bounce (bounceHeight);
                 // Debug.Log(fruitRemaining);
 				if (fruitRemaining > 0) 

@@ -16,24 +16,25 @@ public class WumpaFruit : MonoBehaviour {
         INIT_DURATION = time;
     }
 
-	// void OnCollisionEnter(Collision col) {
-    void OnTriggerEnter(Collider col) {
-        if ((Time.time - startTime) > INIT_DURATION) {
+	void OnCollisionEnter(Collision col) {
+    // void OnTriggerEnter(Collider col) {
+        // if ((Time.time - startTime) > INIT_DURATION) {
             if (col.gameObject.tag == Tags.CRASH && !consumed) {
                 consumed = true;
                 Display.S.IncrementFruit();
                 Destroy(this.gameObject);
             }
-        }
+        // }
     }
     
-    void OnTriggerStay(Collider col) {
-        if ((Time.time - startTime) > INIT_DURATION) {
+    void OnCollisionStay(Collision col) {
+    // void OnTriggerStay(Collider col) {
+        // if ((Time.time - startTime) > INIT_DURATION) {
             if (col.gameObject.tag == Tags.CRASH && !consumed) {
                 consumed = true;
                 Display.S.IncrementFruit();
                 Destroy(this.gameObject);
             }
-        }
+        // }
     }
 }

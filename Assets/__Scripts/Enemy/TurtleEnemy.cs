@@ -73,7 +73,7 @@ public class TurtleEnemy : Enemy {
             }
             Vector3 relativeVec = transform.InverseTransformPoint(Crash.S.transform.position);
             
-            bool jumpOnEnemy = Crash.S.falling && relativeVec.y > 0.5f;
+            bool jumpOnEnemy = Crash.S.falling && Mathf.Abs(relativeVec.y) > 0.5f;
             if (Crash.S.spinning) {
                 LaunchEnemy();
                 flipped = true;
@@ -84,7 +84,12 @@ public class TurtleEnemy : Enemy {
                     flipped = true;
                     Flip(flipped);
                     unflipTimer = Time.time;
+                    Crash.S.Bounce(3f);
+                } else {
+                    unflipTimer = Time.time;
+                    Crash.S.Bounce(7f);
                 }
+                
             } else if (!flipped) {
                 Crash.S.TakeHit();
             }

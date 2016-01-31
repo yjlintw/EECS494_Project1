@@ -26,14 +26,15 @@ public class CrateSwitch : Crate {
 				return;
 			}
 
-			bool landed = Crash.S.collider.bounds.min.y >= boxCol.bounds.max.y - .01f;
+			bool landed = Crash.S.collider.bounds.min.y >= boxCol.bounds.max.y - .1f;
+            
+            Debug.Log("Crash: " +  Crash.S.collider.bounds.min.y + ", Switch BOX: " + boxCol.bounds.max.y);
 
 			if(Crash.S.falling && landed) {
 				if (Crash.S.jumping) {
 					ActivateSwitch ();
                 }
- 				Crash.S.LandOnCrate();
-
+                Crash.S.LandOnCrate();
 			}
 		}
 	}

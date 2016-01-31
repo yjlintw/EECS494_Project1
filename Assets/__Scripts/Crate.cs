@@ -21,7 +21,7 @@ public class Crate : MonoBehaviour {
             bool landed = Crash.S.collider.bounds.min.y >= boxCol.bounds.max.y - .01f;
             Vector3 relativeVec = transform.InverseTransformPoint(Crash.S.transform.position);
             Debug.Log("RelativeVec" + relativeVec);
-            if(Crash.S.falling && landed && relativeVec.y > 1.0f) {
+            if(Crash.S.falling && landed && relativeVec.y > 0.5f) {
                 if (Crash.S.jumping) {
                     BreakBox();
                     Crash.S.Bounce(bounceHeight);
