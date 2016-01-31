@@ -65,8 +65,15 @@ public class TurtleEnemy : Enemy {
     }
     
     void OnCollisionEnter(Collision col) {
+        if (launched && col.gameObject.tag == Tags.WALL && rigid.velocity.magnitude < 0.5f) {
+            Destroy(this.gameObject);
+            return;
+        }
         if (col.gameObject.tag == Tags.CRASH) {
-            if (Crash.S.hasMask()) {
+            if(Crash.S.invincible) {
+                LaunchEnemy();
+                return;
+            } else if (Crash.S.hasMask()) {
                 Destroy(this.gameObject);
                 Crash.S.TakeHit();
                 return;
@@ -94,6 +101,7 @@ public class TurtleEnemy : Enemy {
                 Crash.S.TakeHit();
             }
         }  else if (col.gameObject.tag == Tags.ENEMY) {
+            Debug.Log("touch enemy: Turtle");
             Destroy(this.gameObject);
         }
     }

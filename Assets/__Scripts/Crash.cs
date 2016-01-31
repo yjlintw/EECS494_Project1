@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class Crash : MonoBehaviour {
     
@@ -94,11 +95,11 @@ public class Crash : MonoBehaviour {
         }
         if(!alive) return;
         RaycastHit hit;
-        if(Physics.Raycast(transform.position, -currentUp, out hit, distToGround, groundLayerMask)){
+        if(Physics.Raycast(transform.position, Vector3.down, out hit, distToGround * 1.5f, groundLayerMask)){
             currentUp = hit.normal;
-            // if (Mathf.Abs(Vector3.Dot(currentUp, Vector3.up)) < 0.01f) {
-            //     currentUp = Vector3.up;
-            // }
+            if (Mathf.Abs(Vector3.Dot(currentUp, Vector3.up)) < 0.01f) {
+                currentUp = Vector3.up;
+            }
         }
         
       	iH = Input.GetAxis("Horizontal");
@@ -248,6 +249,9 @@ public class Crash : MonoBehaviour {
 		Invoke("Respawn", 2f);
 	}
 	public void Respawn() {
+        if (Display.S.numLives <= 0) {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
 		alive = true;
 		transform.position = checkpoint;
 		rigid.freezeRotation = true;

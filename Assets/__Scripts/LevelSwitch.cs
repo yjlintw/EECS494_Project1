@@ -21,7 +21,7 @@ public class LevelSwitch : MonoBehaviour {
             Vector3 relativeVec = transform.InverseTransformPoint(Crash.S.transform.position);
             if(landed && relativeVec.y > 0.5f) {
                 ps.Play();
-                Invoke("NextLevel", 5f);
+                Invoke("NextLevel", 2f);
             }
         }
     }
