@@ -260,6 +260,12 @@ public class Crash : MonoBehaviour {
             switchObjects[i].DeactivateSwitch();
         }
         
+        GameObject[] items = GameObject.FindGameObjectsWithTag(Tags.ITEM);
+        foreach (GameObject go in items) {
+            Destroy(go);
+        }
+        
+        
 	}
 
 	public void IncrementMasks() {

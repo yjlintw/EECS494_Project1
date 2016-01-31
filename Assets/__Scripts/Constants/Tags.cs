@@ -3,4 +3,5 @@
     public const string WALL = "Wall";
     public const string SPIN = "Spin";
     public const string ENEMY = "Enemy";
+    public const string ITEM = "Item";
 }

@@ -40,7 +40,7 @@ public class CrabEnemy : Enemy {
             }
             
             Vector3 relativeVec = transform.InverseTransformPoint(Crash.S.collider.bounds.min);
-            Debug.Log(relativeVec);
+            // Debug.Log(relativeVec);
             
 			bool killEnemy = Crash.S.falling && relativeVec.y >= -0.5f;
 
