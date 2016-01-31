@@ -48,10 +48,13 @@ public class Crash : MonoBehaviour {
     private bool jumpRelease = false;
     private bool jumpKeyDown = false;
     public GameObject akuAkuMask;
+    public Quaternion currentRotation;
+    Vector3 currentUp = Vector3.up;
     
     void Awake() {
         S = this;
 		checkpoint = transform.position;
+        currentRotation = transform.rotation;
     }
 	// Use this for initialization
 	void Start () {
@@ -71,13 +74,28 @@ public class Crash : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-		if(!alive) return;
+        
+        akuAkuMask.transform.position = transform.position + new Vector3(1, 2, 0);
 	   	// Get movement input
+        if (hasMask()) {
+            akuAkuMask.SetActive(true);
+        } else {
+            akuAkuMask.SetActive(false);
+        }
+        if(!alive) return;
+        RaycastHit hit;
+        if(Physics.Raycast(transform.position, -currentUp, out hit, distToGround, groundLayerMask)){
+            currentUp = hit.normal;
+            if (Mathf.Abs(Vector3.Dot(currentUp, Vector3.up)) < 0.1f) {
+                currentUp = Vector3.up;
+            }
+        }
         
       	iH = Input.GetAxis("Horizontal");
        	iV = Input.GetAxis("Vertical");
        	float jump = Input.GetAxis("Jump");
        	float spin = Input.GetAxis("Fire1");
+           
        
         if (iH != 0 || iV != 0) {
             foot.SetActive(false);
@@ -90,12 +108,15 @@ public class Crash : MonoBehaviour {
        	if (canSpin && !spinning && spin > 0) {
            spinning = true;
            spinStartTime = Time.time;
+           currentRotation = transform.rotation;
        	}
        
        	if (spinning && Time.time - spinStartTime > spinDuration) {
            spinning = false;
            canSpin = false;
            spinEndTime = Time.time;
+           transform.rotation = currentRotation;
+           
        	}
            
         if (!canSpin && Time.time - spinEndTime > spinPauseDuration && spin <= 0) {
@@ -106,7 +127,7 @@ public class Crash : MonoBehaviour {
        	// Set the x and z values of new velocity
        	
         
-        if (spinning) {
+        if (spinning || (jumping && !falling)) {
             vel = rigid.velocity;
         } else {
             vel = Vector3.zero;
@@ -118,55 +139,67 @@ public class Crash : MonoBehaviour {
         
        
        	if (spinning) {
-           	transform.Rotate(Vector3.up, spinSpeed * Time.fixedTime);
+            
+           	transform.Rotate(transform.up, spinSpeed * Time.fixedTime);
 
        	} else if (GetArrowInput() && vel != Vector3.zero) {
             Vector3 cameraAngle = new Vector3(0, Camera.main.transform.rotation.eulerAngles.y, 0);
             Vector3 globalVel = Vector3.zero;
             globalVel.z += iV * speed;
             globalVel.x += iH * speed;
-        	transform.rotation = Quaternion.LookRotation(globalVel);
+        	transform.rotation = Quaternion.LookRotation(globalVel, currentUp);
             transform.Rotate(cameraAngle);
-       	} 
-       
+       	} else {
+            transform.rotation = Quaternion.LookRotation(transform.forward, currentUp);       
+        } 
+           
+        Debug.DrawRay(transform.position, currentUp, Color.yellow);
+        Debug.DrawRay(transform.position, transform.up, Color.blue);
 
 
-       falling = rigid.velocity.y < 0;
-       grounded = (grounded && !jumping && !falling) || OnGround();
-       
-       if (jumping && jump <= 0) {
-           jumpRelease = true;
-       }
 
-       if (jump > 0 && grounded && !jumpKeyDown) {
-           vel.y = jumpVel;
-           jumping = true;
-           jumpTimer = Time.time;
-       } else {
-           if (grounded) {
-               jumping = false;
-               jumpRelease = false;
-           } else if (jump > 0 && (Time.time - jumpTimer) < JUMP_TIME && !jumpRelease) {
-               vel.y = jumpVel;
-               Debug.Log("Jump: " + jump.ToString());
-           } else {
-               vel.y = rigid.velocity.y;
-           }
-       }
+        grounded = (grounded && !jumping) || OnGround();
+        falling = rigid.velocity.y < -0.1f && !grounded;
+        
+        
+        if (jumping && jump <= 0) {
+            jumpRelease = true;
+        }
+
+        if (jump > 0 && grounded && !jumpKeyDown) {
+            vel.y = jumpVel;
+            jumping = true;
+            jumpTimer = Time.time;
+        } else {
+            if (grounded) {
+                jumping = false;
+                jumpRelease = false;
+                vel.y = rigid.velocity.y;
+            } else if (jump > 0 && (Time.time - jumpTimer) < JUMP_TIME && !jumpRelease) {
+                vel.y = jumpVel;
+                Debug.Log("Jump: " + jump.ToString());
+            } else {
+                vel.y = rigid.velocity.y;
+            }
+        }
+        
+        if (jump <= 0) {
+            jumpKeyDown = false;
+        } else {
+            jumpKeyDown = true;
+        }
        
-       if (jump <= 0) {
-           jumpKeyDown = false;
-       } else {
-           jumpKeyDown = true;
-       }
-       
-       // Apply our new Velocity
-       rigid.velocity = vel;
+        // Apply our new Velocity
+        rigid.velocity = vel;
 	}
+    
+    public bool hasMask() {
+        return maskCount > 0;
+    }
     
     public void LandOnCrate() {
         grounded = true;
-        
+        jumping = false;
     }
     
     public void Bounce(float bounceVel) {
@@ -193,6 +226,7 @@ public class Crash : MonoBehaviour {
 		if (!alive)
 			return;
 		alive = false;
+        maskCount = 0;
 		transform.rotation = Quaternion.Euler(-90,0,0);
 		Display.S.DecrementLives ();
 		Invoke("Respawn", 2f);
@@ -226,12 +260,12 @@ public class Crash : MonoBehaviour {
 		invincible = true;
 		invincibleStartTime = Time.time;
 		Invoke ("ShowInvincibleFlash", 0.25f);
-        akuAkuMask.SetActive(true);
+        // akuAkuMask.SetActive(true);
 	}
 	public void EndAkuAku() {
 		invincible = false;
 		maskCount = 2;
-        akuAkuMask.SetActive(false);
+        // akuAkuMask.SetActive(false);
 	}
 	void ShowInvincibleFlash() {
 		foreach(Material m in materials) {
@@ -254,15 +288,15 @@ public class Crash : MonoBehaviour {
 	}
 
     bool OnGround() {
-        return Physics.Raycast(transform.position, Vector3.down, distToGround, groundLayerMask)
-            || Physics.Raycast(transform.position + groundedOffest * Vector3.left, Vector3.down, distToGround, groundLayerMask)
-            || Physics.Raycast(transform.position + groundedOffest * Vector3.right, Vector3.down, distToGround, groundLayerMask)
-            || Physics.Raycast(transform.position + groundedOffest * Vector3.forward, Vector3.down, distToGround, groundLayerMask)
-            || Physics.Raycast(transform.position + groundedOffest * Vector3.back, Vector3.down, distToGround, groundLayerMask)
-            || Physics.Raycast(transform.position + groundedOffest * (Vector3.back + Vector3.left), Vector3.down, distToGround, groundLayerMask)
-            || Physics.Raycast(transform.position + groundedOffest * (Vector3.back + Vector3.right), Vector3.down, distToGround, groundLayerMask)
-            || Physics.Raycast(transform.position + groundedOffest * (Vector3.forward + Vector3.left), Vector3.down, distToGround, groundLayerMask)
-            || Physics.Raycast(transform.position + groundedOffest * (Vector3.forward + Vector3.right), Vector3.down, distToGround, groundLayerMask);
+        return Physics.Raycast(transform.position, -transform.up, distToGround, groundLayerMask)
+            || Physics.Raycast(transform.position + groundedOffest * -transform.right, -transform.up, distToGround, groundLayerMask)
+            || Physics.Raycast(transform.position + groundedOffest * transform.right, -transform.up, distToGround, groundLayerMask)
+            || Physics.Raycast(transform.position + groundedOffest * transform.forward, -transform.up, distToGround, groundLayerMask)
+            || Physics.Raycast(transform.position + groundedOffest * -transform.forward, -transform.up, distToGround, groundLayerMask)
+            || Physics.Raycast(transform.position + groundedOffest * (-transform.forward - transform.right), -transform.up, distToGround, groundLayerMask)
+            || Physics.Raycast(transform.position + groundedOffest * (-transform.forward + transform.right), -transform.up, distToGround, groundLayerMask)
+            || Physics.Raycast(transform.position + groundedOffest * (transform.forward - transform.right), -transform.up, distToGround, groundLayerMask)
+            || Physics.Raycast(transform.position + groundedOffest * (transform.forward + transform.right), -transform.up, distToGround, groundLayerMask);
     }
     
     //Returns true if an arrow key is being pressed

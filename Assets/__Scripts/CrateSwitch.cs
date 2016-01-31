@@ -10,6 +10,7 @@ public struct ControlledCrates {
 
 public class CrateSwitch : Crate {
 	public ControlledCrates[] controlledCrates;
+    
     private List<GameObject> bridge = new List<GameObject>();
 	public Material activatedMat;
     public Material deactivatedMat;

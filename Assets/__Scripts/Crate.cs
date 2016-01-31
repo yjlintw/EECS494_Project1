@@ -17,7 +17,7 @@ public class Crate : MonoBehaviour {
     void OnCollisionEnter(Collision col) {
         Debug.Log("OnCollision");
         if (col.gameObject.tag == Tags.CRASH) {
-            bool landed = Crash.S.collider.bounds.min.y <= boxCol.bounds.max.y + .01f;
+            bool landed = Crash.S.collider.bounds.min.y >= boxCol.bounds.max.y - .01f;
             if(Crash.S.falling && landed) {
                 if (Crash.S.jumping) {
                     BreakBox();
@@ -44,11 +44,6 @@ public class Crate : MonoBehaviour {
         }
     }
     
-    void OnCollisionStay(Collision col) {
-        // if (col.gameObject.tag == Tags.CRASH && Crash.S.spinning) {
-        //     BreakBox();
-        // }
-    }
     
     protected virtual void BreakBox() {
         Vector3 pos = transform.position;
