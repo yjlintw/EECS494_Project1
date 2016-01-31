@@ -74,7 +74,17 @@ public class Crash : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-        
+        if (Input.GetKeyDown(KeyCode.P)) {
+            invincible = !invincible;
+            
+            for (int i = 0; i < materials.Length; i++) {
+                if (invincible) {
+                    materials[i].color = Color.blue;
+                } else {
+                    materials[i].color = originalColors[i];
+                }
+            }
+        }
         akuAkuMask.transform.position = transform.position + new Vector3(1, 2, 0);
 	   	// Get movement input
         if (hasMask()) {

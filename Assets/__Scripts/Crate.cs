@@ -11,7 +11,7 @@ public class Crate : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	   boxCol = gameObject.GetComponent<BoxCollider>();
+	    boxCol = gameObject.GetComponent<BoxCollider>();
 	}
 	
     
