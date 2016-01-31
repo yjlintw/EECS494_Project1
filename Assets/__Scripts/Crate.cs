@@ -7,6 +7,7 @@ public class Crate : MonoBehaviour {
     public float bounceHeight = 7f;
     
     protected BoxCollider boxCol;
+    bool broken = false;
 
 	// Use this for initialization
 	void Start () {
@@ -17,8 +18,10 @@ public class Crate : MonoBehaviour {
     void OnCollisionEnter(Collision col) {
         Debug.Log("OnCollision");
         if (col.gameObject.tag == Tags.CRASH) {
-            bool landed = Crash.S.collider.bounds.min.y <= boxCol.bounds.max.y + .01f;
-            if(Crash.S.falling && landed) {
+            bool landed = Crash.S.collider.bounds.min.y >= boxCol.bounds.max.y - .01f;
+            Vector3 relativeVec = transform.InverseTransformPoint(Crash.S.transform.position);
+            Debug.Log("RelativeVec" + relativeVec);
+            if(Crash.S.falling && landed && relativeVec.y > 1.0f) {
                 if (Crash.S.jumping) {
                     BreakBox();
                     Crash.S.Bounce(bounceHeight);
@@ -26,6 +29,8 @@ public class Crate : MonoBehaviour {
                     Crash.S.LandOnCrate();
                 }
             }
+        } else if (col.gameObject.tag == Tags.ENEMY) {
+            BreakBox();
         }
     }
     
@@ -33,7 +38,6 @@ public class Crate : MonoBehaviour {
         if (col.gameObject.tag == Tags.SPIN) {
             if (Crash.S.spinning) {
                 BreakBox();
-                return;
             }
         }
     }
@@ -51,6 +55,11 @@ public class Crate : MonoBehaviour {
     }
     
     protected virtual void BreakBox() {
+        if (broken) {
+            return;
+        }
+        
+        broken = true;
         Vector3 pos = transform.position;
         Destroy(this.gameObject);
         if (item != null) {

@@ -7,14 +7,16 @@ public class CrateMulti : Crate {
 
 	void OnCollisionEnter(Collision col) {
 		if (col.gameObject.tag == Tags.CRASH) {
-			bool landed = Crash.S.collider.bounds.min.y <= boxCol.bounds.max.y + .1f;
-			if (Crash.S.falling && landed) {
+			bool landed = Crash.S.collider.bounds.min.y >= boxCol.bounds.max.y - .1f;
+			Vector3 relativeVec = transform.InverseTransformPoint(Crash.S.transform.position);
+            Debug.Log("RelativeVec" + relativeVec);
+            if((Crash.S.falling && landed && relativeVec.y > 1.0f) || (Crash.S.jumping && relativeVec.y > 1.0f)) {
 				Crash.S.Bounce (bounceHeight);
-                Debug.Log(fruitRemaining);
+                // Debug.Log(fruitRemaining);
 				if (fruitRemaining > 0) 
 				{
 					Vector3 pos = transform.position;
-					pos.y += 1;
+					pos += transform.up;
 					Instantiate (item, pos, Quaternion.identity);
 					fruitRemaining--;
 				}
@@ -24,6 +26,12 @@ public class CrateMulti : Crate {
 				}
 			}
 
-		}
+		} else if (col.gameObject.tag == Tags.ENEMY) {
+            BreakBox();
+        }
 	}
+    
+    protected override void BreakBox() {
+        Destroy(this.gameObject);
+    }
 }

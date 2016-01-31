@@ -18,6 +18,14 @@ public class CrabEnemy : Enemy {
 	}
     
     void OnCollisionEnter(Collision col) {
+        if (launched) {
+            Debug.Log(rigid.velocity.magnitude);
+        }
+        if (launched && col.gameObject.tag == Tags.WALL && rigid.velocity.magnitude < 0.5f) {
+            Destroy(this.gameObject);
+            return;
+        }
+        
         if (col.gameObject.tag == Tags.WALL) {
             Debug.Log("Crab, collide wall");
             speed *= -1;
@@ -25,9 +33,16 @@ public class CrabEnemy : Enemy {
             if(Crash.S.invincible) {
                 LaunchEnemy();
                 return;
+            } else if (Crash.S.hasMask()) {
+                Crash.S.TakeHit();
+                Destroy(this.gameObject);
+                return;
             }
-         
-			bool killEnemy = Crash.S.collider.bounds.min.y <= boxCol.bounds.max.y + 0.1f;
+            
+            Vector3 relativeVec = transform.InverseTransformPoint(Crash.S.collider.bounds.min);
+            Debug.Log(relativeVec);
+            
+			bool killEnemy = Crash.S.falling && relativeVec.y >= -0.5f;
 
             if (Crash.S.spinning) {
                 LaunchEnemy();
@@ -40,6 +55,8 @@ public class CrabEnemy : Enemy {
 			else {
 				Crash.S.TakeHit();
 			}
+        } else if (col.gameObject.tag == Tags.ENEMY) {
+            Destroy(this.gameObject);
         }
     }
 }

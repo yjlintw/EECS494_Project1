@@ -66,8 +66,14 @@ public class TurtleEnemy : Enemy {
     
     void OnCollisionEnter(Collision col) {
         if (col.gameObject.tag == Tags.CRASH) {
+            if (Crash.S.hasMask()) {
+                Destroy(this.gameObject);
+                Crash.S.TakeHit();
+                return;
+            }
+            Vector3 relativeVec = transform.InverseTransformPoint(Crash.S.transform.position);
             
-            bool jumpOnEnemy = Crash.S.collider.bounds.min.y >= boxCol.bounds.max.y - 0.1f;
+            bool jumpOnEnemy = Crash.S.falling && relativeVec.y > 0.5f;
             if (Crash.S.spinning) {
                 LaunchEnemy();
                 flipped = true;
@@ -82,6 +88,8 @@ public class TurtleEnemy : Enemy {
             } else if (!flipped) {
                 Crash.S.TakeHit();
             }
+        }  else if (col.gameObject.tag == Tags.ENEMY) {
+            Destroy(this.gameObject);
         }
     }
     
