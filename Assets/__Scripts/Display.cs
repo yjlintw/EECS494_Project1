@@ -35,6 +35,16 @@ public class Display : MonoBehaviour {
 	}
     
     void Update() {
+        
+        float inputW = Input.GetAxis("ShowDisplay");
+        
+        if(inputW != 0) {
+            showFruit = true;
+            showLives = true;
+            livesTimer = Time.time;
+            fruitTimer = Time.time;
+        }
+        
         if (showFruit) {
             fruitText.gameObject.SetActive(true);
             fruitIcon.gameObject.SetActive(true);
@@ -95,4 +105,5 @@ public class Display : MonoBehaviour {
         showFruit = true;
         fruitTimer = Time.time;
     }
+    
 }
